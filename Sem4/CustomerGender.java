@@ -1,3 +1,4 @@
+//2024.01.27 m24
 public enum CustomerGender {
     MAN ("Мужской"),
     WOMAN  ("Женский");
