@@ -91,13 +91,13 @@ public class ArrayToCharList {
                     bytes3AndMore.add((Character) resultToList);                    
                     //очищаем буфер, оставляя только младшие биты, что мы не брали в предыдущий байт
                     //temp = temp << (BITS_IN_TEMP - restInTempWeHaveBits);
-                    //temp = temp >>> (BITS_IN_TEMP - restInTempWeHaveBits-1);
+                    //temp = temp >>> (BITS_IN_TEMP - restInTempWeHaveBits);
                     temp -= ((int) resultToList) << restInTempWeHaveBits;
                     inTempWeHaveBits = restInTempWeHaveBits;
                 }
             }
         }
-        //Если после перебора всего массива, в буфере, во временном хранилище остались не забранные биты, мы должны их тоже добавить в список
+        //Если после перебора всего массива, в буфере, во временном хранилище остались не забранные биты, так как мы забирали четко по байту. Мы должны их тоже добавить в список
         if(inTempWeHaveBits>0){
             //сдвигаем все биты к старшему концу
             temp = temp<<(BITS_IN_BYTE - inTempWeHaveBits);

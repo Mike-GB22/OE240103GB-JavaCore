@@ -12,26 +12,29 @@ public class Main {
         //System.out.println(new AnalysisArrayToConvertation(1,-2000));
 
         System.out.println("---------------------");
-        int[][] array = new int[4][4];
-        array[0][0] = 4;
+        int[][] array = new int[4][5];
+        array[0][0] = 10;
         array[0][1] = 3;
         array[0][2] = 2;
         array[0][3] = 1;
 
-        array[1][0] = 4;
-        array[1][1] = 3;
+        array[1][0] = 11;
+        array[1][1] = 1;
         array[1][2] = 2;
-        array[1][3] = 1;
+        array[1][3] = 3;
+        array[1][4] = 4;
 
-        array[2][0] = 4;
+        array[2][0] = 14;
         array[2][1] = 3;
         array[2][2] = 2;
         array[2][3] = 1;
+        array[2][4] = 0;
 
-        array[3][0] = 4;
-        array[3][1] = 3;
+        array[3][0] = 0;
+        array[3][1] = 1;
         array[3][2] = 2;
-        array[3][3] = 1;
+        array[3][3] = 3;
+        array[3][4] = 20;        
 
         //array[2][0] = Integer.MAX_VALUE;
         //array[2][1] = Integer.MIN_VALUE;

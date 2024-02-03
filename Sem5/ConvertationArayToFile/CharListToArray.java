@@ -23,6 +23,9 @@ public class CharListToArray {
         System.out.println("Количество бит для числа:  " + weUseBitsForNumber);
         System.out.println("Есть бит знака:  " + isNegativSign);
 
+        final int BITS_IN_TEMP = 32; 
+        final int BITS_IN_BYTE = 8; 
+
         list.add((Character)((char) 0));
         list.add((Character)((char) 0));
         list.add((Character)((char) 0));
@@ -30,40 +33,47 @@ public class CharListToArray {
         int[] tempArray = new int[sizeXY + 4];
         int inTempWeHaveBits = 0;
         int temp = 0;
+        int maskOnlyNumberBits = 0xFFFFFFFF>>>(BITS_IN_TEMP - weUseBitsForNumber);
         int countReadNumbers = 0;
-        final int BITS_IN_TEMP = 32; 
-        final int BITS_IN_BYTE = 8; 
         for(int i = 2; i < list.size(); i++){
             temp = temp<<BITS_IN_BYTE;
             temp += list.get(i);
             inTempWeHaveBits += BITS_IN_BYTE;
-            if(inTempWeHaveBits >= BITS_IN_TEMP){
-                //Перебираем биты в буфере, пока не останется меньше чем достаточно для одного числа - weUseBitsForNumber
-                do{
-                    int multiplicatorForNegativSing = 1;
-                    if(isNegativSign){
-                        //Считываем первый бит, в буфере. 0 - число положительное, 1 - отрицательное
-                        int firstBit = temp >>> (BITS_IN_TEMP - 1);
-                        multiplicatorForNegativSing = 1 - (2 * firstBit);
-                        temp = temp<< 1;
-                        inTempWeHaveBits --;
-                    }
-                    int result = temp >>> (BITS_IN_TEMP - weUseBitsForNumber);
-                    result *= multiplicatorForNegativSing;
-                    tempArray[countReadNumbers] = result;
-                    countReadNumbers++;
-                    temp = temp << weUseBitsForNumber;
-                    inTempWeHaveBits -= weUseBitsForNumber;
 
-                } while ((inTempWeHaveBits >= weUseBitsForNumber) && countReadNumbers < sizeXY);
+            //Перебираем биты в буфере, пока не останется меньше чем достаточно для одного числа - weUseBitsForNumber
+            while ((inTempWeHaveBits >= weUseBitsForNumber) && countReadNumbers < sizeXY){
+                int multiplicatorForNegativSing = 1;
+                //Должны ли мы обрабатывать 1й бит как знак
+                if(isNegativSign){
+                    //Считываем первый бит, в буфере. 0 - число положительное, 1 - отрицательное
+                    int firstBit = temp >>> (BITS_IN_TEMP - 1);
+                    multiplicatorForNegativSing = 1 - (2 * firstBit);
+                    temp = temp<< 1;
+                    //b!!!!brat s drugoy storoni
+                    inTempWeHaveBits --;
+                }
+                System.out.print("temp: " + temp + " [weHaveBits: " + inTempWeHaveBits +"]");
+                int restInTempWeHaveBits = inTempWeHaveBits - weUseBitsForNumber;
+                int result = temp >>> restInTempWeHaveBits;
+                int resultWithMask = result & maskOnlyNumberBits;
+                int resultWithSign = resultWithMask * multiplicatorForNegativSing;
+                tempArray[countReadNumbers++] = resultWithSign;
+
+                //Вычитаем из буфера те биты что мы уже превартили в число
+                int resultToDeleteFromTemp = temp >>> restInTempWeHaveBits;
+                resultToDeleteFromTemp = resultToDeleteFromTemp << restInTempWeHaveBits;
+                temp = temp - resultToDeleteFromTemp;
+                inTempWeHaveBits = restInTempWeHaveBits;
+                System.out.print(", weTakeThis: " + resultToDeleteFromTemp);
+                System.out.print(", und bekommen das: " + result + " ["+ resultWithSign +"]");
+                System.out.println(", rest temp: " + temp + " [weHaveBits: " + inTempWeHaveBits +"]");
             }
-            
         }
 
         int[][] array = new int[sizeX][sizeY];
         for(int x = 0; x < sizeX; x++){
             for(int y = 0; y < sizeY; y++){
-                array[x][y]=tempArray[sizeX*x + y];
+                array[x][y]=tempArray[sizeY*x + y];
             }
         }
 
