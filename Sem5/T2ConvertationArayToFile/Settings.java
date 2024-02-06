@@ -1,4 +1,4 @@
-package Sem5.ConvertationArayToFile;
+package Sem5.T2ConvertationArayToFile;
 
 public class Settings {
     public static final String FILE_NAME = "ArrayToFile.txt";
